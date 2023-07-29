@@ -16,7 +16,6 @@ public class UnitConversionApi {
 		try {
 			UnitConverter.convert(details);
 		} catch (UnitConversionException e) {
-			// TODO Auto-generated catch block
 			return ResponseEntity.badRequest().build();
 		}
 		

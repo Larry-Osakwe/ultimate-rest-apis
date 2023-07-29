@@ -14,6 +14,14 @@ public class UnitConverter {
 			
 			LengthConverter.mile2Kilometer(details);
 			
+		} else if (fromUnit.equals("kg") && toUnit.equals("pound")) {
+			
+			WeightConverter.kilogramToPound(details);
+			
+		} else if (fromUnit.equals("pound") && toUnit.equals("kg")) {
+			
+			WeightConverter.poundToKilogram(details);
+			
 		} else {
 			throw new UnitConversionException("Invalid From and To Units");
 		}
