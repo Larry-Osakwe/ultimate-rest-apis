@@ -1,0 +1,66 @@
+openapi: 3.0.3
+info:
+  title: Example API Users
+  version: 1.0.0
+  description: API about users management
+  termsOfService: https://company.com/terms
+  contact:
+    email: contact@company.com
+    name: The Company Man
+    url: https://company.com/terms
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost:8080
+    variables: {}
+    description: Local server development
+tags:
+  - name: user
+    description: Everything about user
+paths:
+  /users:
+    summary: Operations about users
+    get:
+      summary: Get users information
+      description: Returns a list of users
+      operationId: listUsers
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                A list of users:
+                  value: |-
+                    [
+                     {
+                      "id": 1,
+                      "email": "name@company.com",
+                      "name": "John Smith"
+                     },
+                     {
+                      "id": 2,
+                      "email": "name2@company.com",
+                      "name": "John Jacob"
+                     }
+                    ]
+        '204':
+          description: No content available
+      tags:
+        - user
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 69
+        name:
+          type: string
+          example: John Smith
+        email:
+          type: string
+          example: john.smith@email.com
