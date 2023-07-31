@@ -1,0 +1,16 @@
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/configuration/HomeController.java
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/configuration/SwaggerDocumentationConfig.java
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/configuration/LocalDateConverter.java
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/api/NotFoundException.java
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/api/UsersApi.java
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/configuration/LocalDateTimeConverter.java
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/configuration/JacksonConfiguration.java
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/api/UsersApiController.java
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/api/ApiException.java
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/model/User.java
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/Swagger2SpringBoot.java
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/RFC3339DateFormat.java
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/api/ApiOriginFilter.java
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/configuration/CustomInstantDeserializer.java
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/configuration/SwaggerUiConfiguration.java
+/mnt/c/Users/larry/Dev/Tutorials/UltimateRestApis/ExampleAPISwagger/spring-server-generated/src/main/java/io/swagger/api/ApiResponseMessage.java

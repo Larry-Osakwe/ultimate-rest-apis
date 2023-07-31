@@ -1,0 +1,144 @@
+openapi: 3.0.3
+info:
+  title: Example API Student
+  version: 1.0.0
+  description: API about student management
+  termsOfService: https://company.com/terms
+  contact:
+    email: contact@company.com
+    name: The Company Man
+    url: https://company.com/terms
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost:8080
+    variables: {}
+    description: Local server development
+tags:
+  - name: student
+    description: Everything about students
+paths:
+  /api/students:
+    summary: Operations about students
+    get:
+      summary: Get students information
+      description: Returns a list of students
+      operationId: listStudents
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                A list of students:
+                  value: |-
+                    [
+                     {
+                      "id": 1,
+                      "name": "John Smith"
+                     },
+                     {
+                      "id": 2,
+                      "name": "John Jacob"
+                     }
+                    ]
+        '204':
+          description: No content available
+      tags:
+        - student
+    post:
+      summary: Create student
+      description: Returns a created student
+      operationId: createStudent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: John Smith
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                A created student:
+                  value: |-
+                     {
+                      "id": 1,
+                      "name": "John Smith"
+                     }
+        '204':
+          description: No content available
+      tags:
+        - student
+    put:
+      summary: Create student
+      description: Returns a replaced student
+      operationId: replaceStudent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 3
+                name:
+                  type: string
+                  example: John Smith
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                A replaced student:
+                  value: |-
+                     {
+                      "id": 3,
+                      "name": "John Smith"
+                     }
+        '404':
+          description: No Student Found
+      tags:
+        - student
+  /api/student/{id}:
+    delete:
+      summary: Create student
+      description: Returns a replaced student
+      operationId: deleteStudent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: successful operation
+          
+        '404':
+          description: No Student Found
+      tags:
+        - student
+components:
+  schemas:
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 69
+        name:
+          type: string
+          example: John Smith
