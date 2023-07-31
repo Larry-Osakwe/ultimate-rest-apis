@@ -43,7 +43,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Void> listUsers();
+    ResponseEntity<?> listUsers();
 
 }
 

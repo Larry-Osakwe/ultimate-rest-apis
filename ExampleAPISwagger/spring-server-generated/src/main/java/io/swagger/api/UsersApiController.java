@@ -1,6 +1,8 @@
 package io.swagger.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.swagger.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -47,9 +49,14 @@ public class UsersApiController implements UsersApi {
         this.request = request;
     }
 
-    public ResponseEntity<Void> listUsers() {
-        String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    public ResponseEntity<?> listUsers() {
+        User user1 = new User(1L, "John Smith", "john.smith@email.com");
+        User user2 = new User(2L, "Jane Smith", "jane.smith@email.com");
+        User user3 = new User(3L, "John Jacob", "jingle.smith@email.com");
+        
+        List<User> listUsers = List.of(user1, user2, user3);
+        
+        return ResponseEntity.ok(listUsers);
     }
 
 }

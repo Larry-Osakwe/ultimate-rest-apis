@@ -24,8 +24,19 @@ public class User   {
 
   @JsonProperty("email")
   private String email = null;
+  
+  public User() {
+	  
+  }
 
-  public User id(Long id) {
+  public User(Long id, String name, String email) {
+	super();
+	this.id = id;
+	this.name = name;
+	this.email = email;
+}
+
+public User id(Long id) {
     this.id = id;
     return this;
   }
