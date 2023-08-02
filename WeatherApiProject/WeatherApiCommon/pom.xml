@@ -8,8 +8,8 @@
 		<version>3.1.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.mycompany</groupId>
-	<artifactId>WeatherApiCommon</artifactId>
+	<groupId>com.skyapi</groupId>
+	<artifactId>weather-api-common</artifactId>
 	<version>1.0.0</version>
 	<name>WeatherApiCommon</name>
 	<description>Shared library project for Weather Forecast API</description>
