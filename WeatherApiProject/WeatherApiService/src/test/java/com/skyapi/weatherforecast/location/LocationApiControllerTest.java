@@ -71,4 +71,86 @@ public class LocationApiControllerTest {
 		.andExpect(header().string("Location", "/v1/locations/NYC_USA"))
 		.andDo(print());		
 	}
+	
+	@Test
+	public void testListShouldReturn204NoContent() throws Exception {
+		
+		Mockito.when(service.list()).thenReturn(Collections.emptyList());
+		
+		mockMvc.perform(get(END_POINT_PATH))
+				.andExpect(status().isNoContent())
+				.andDo(print());
+	}
+	
+	@Test
+	public void testListShouldReturn200OK() throws Exception {
+		Location location1 = new Location();
+		location1.setCode("NYC_USA");
+		location1.setCityName("New York City");
+		location1.setRegionName("New York");
+		location1.setCountryCode("US");
+		location1.setCountryName("United States of America");
+		location1.setEnabled(true);		
+		
+		Location location2 = new Location();
+		location2.setCode("LACA_USA");
+		location2.setCityName("Los Angeles");
+		location2.setRegionName("California");
+		location2.setCountryCode("US");
+		location2.setCountryName("United States of America");
+		location2.setEnabled(true);	
+		
+		Mockito.when(service.list()).thenReturn(List.of(location1, location2));
+		
+		mockMvc.perform(get(END_POINT_PATH))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType("application/json"))
+			.andExpect(jsonPath("$[0].code", is("NYC_USA")))
+			.andExpect(jsonPath("$[0].city_name", is("New York City")))
+			.andExpect(jsonPath("$[1].code", is("LACA_USA")))
+			.andExpect(jsonPath("$[1].city_name", is("Los Angeles")))			
+			.andDo(print());			
+	}
+	
+	@Test
+	public void testGetShouldReturn405MethodNotAllowed() throws Exception {
+		String requestURI = END_POINT_PATH + "/ABCDEF";
+		
+		mockMvc.perform(post(requestURI))
+			.andExpect(status().isMethodNotAllowed())
+			.andDo(print());			
+	}
+	
+	@Test
+	public void testGetShouldReturn404NotFound() throws Exception {
+		String requestURI = END_POINT_PATH + "/ABCDEF";
+		
+		mockMvc.perform(get(requestURI))
+			.andExpect(status().isNotFound())
+			.andDo(print());			
+	}
+	
+	@Test
+	public void testGetShouldReturn200OK() throws Exception {
+		String code = "LACA_USA";
+		String requestURI = END_POINT_PATH + "/" + code;
+		
+		Location location = new Location();
+		location.setCode("LACA_USA");
+		location.setCityName("Los Angeles");
+		location.setRegionName("California");
+		location.setCountryCode("US");
+		location.setCountryName("United States of America");
+		location.setEnabled(true);	
+		
+		Mockito.when(service.get(code)).thenReturn(location);
+		
+		mockMvc.perform(get(requestURI))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType("application/json"))
+			.andExpect(jsonPath("$.code", is(code)))
+			.andExpect(jsonPath("$.city_name", is("Los Angeles")))
+			.andDo(print());		
+	}
+	
 }
