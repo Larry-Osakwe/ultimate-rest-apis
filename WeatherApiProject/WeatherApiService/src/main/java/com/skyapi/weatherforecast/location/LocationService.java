@@ -54,4 +54,12 @@ public class LocationService {
 		
 		return repo.save(locationInDB);
 	}
+	
+	public void delete(String code) {
+		if (!repo.existsById(code)) {
+			throw new LocationNotFoundException(code);
+		}
+		
+		repo.trashByCode(code);
+	}
 }

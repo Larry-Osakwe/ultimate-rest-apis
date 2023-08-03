@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,6 +64,17 @@ public class LocationApiController {
 			Location updatedLocation = service.update(location);
 			
 			return ResponseEntity.ok(updatedLocation);
+		} catch (LocationNotFoundException e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@DeleteMapping("/{code}")
+	public ResponseEntity<?> deleteLocation(@PathVariable("code") String code) {
+		try {
+			service.delete(code);
+			
+			return ResponseEntity.noContent().build();
 		} catch (LocationNotFoundException e) {
 			return ResponseEntity.notFound().build();
 		}
