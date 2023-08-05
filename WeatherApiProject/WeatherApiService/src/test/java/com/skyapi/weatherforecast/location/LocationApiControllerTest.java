@@ -1,5 +1,6 @@
 package com.skyapi.weatherforecast.location;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skyapi.weatherforecast.common.Location;
@@ -209,6 +211,65 @@ public class LocationApiControllerTest {
 			.andExpect(jsonPath("$.code", is("NYC_USA")))
 			.andExpect(jsonPath("$.city_name", is("New York City")))
 			.andDo(print());		
+	}
+	
+	@Test
+	public void testValidateRequestBodyLocationCodeNotNull() throws Exception {
+		Location location = new Location();
+		location.setCityName("New York City");
+		location.setRegionName("New York");
+		location.setCountryCode("US");
+		location.setCountryName("United States of America");
+		location.setEnabled(true);	
+		
+		String bodyContent = mapper.writeValueAsString(location);
+		
+		mockMvc.perform(post(END_POINT_PATH).contentType("application/json").content(bodyContent))
+			.andExpect(status().isBadRequest())
+			.andExpect(content().contentType("application/json"))
+			.andExpect(jsonPath("$.errors[0]", is("Location code cannot be null")))
+			.andDo(print());			
+	}
+	
+	@Test
+	public void testValidateRequestBodyLocationCodeLength() throws Exception {
+		Location location = new Location();
+		location.setCode("");
+		location.setCityName("New York City");
+		location.setRegionName("New York");
+		location.setCountryCode("US");
+		location.setCountryName("United States of America");
+		location.setEnabled(true);	
+		
+		String bodyContent = mapper.writeValueAsString(location);
+		
+		mockMvc.perform(post(END_POINT_PATH).contentType("application/json").content(bodyContent))
+			.andExpect(status().isBadRequest())
+			.andExpect(content().contentType("application/json"))
+			.andExpect(jsonPath("$.errors[0]", is("Location code must have 3-12 characters")))
+			.andDo(print());			
+	}
+	
+	@Test
+	public void testValidateRequestBodyAllFieldsInvalid() throws Exception {
+		Location location = new Location();
+		location.setRegionName("");
+		
+		String bodyContent = mapper.writeValueAsString(location);
+		
+		MvcResult mvcResult = mockMvc.perform(post(END_POINT_PATH).contentType("application/json").content(bodyContent))
+			.andExpect(status().isBadRequest())
+			.andExpect(content().contentType("application/json"))
+			.andDo(print())
+			.andReturn();		
+		
+		String responseBody = mvcResult.getResponse().getContentAsString();
+		
+		assertThat(responseBody).contains("Location code cannot be null");
+		assertThat(responseBody).contains("City name cannot be null");
+		assertThat(responseBody).contains("Region name must have 3-128 characters");
+		assertThat(responseBody).contains("Country name cannot be null");
+		assertThat(responseBody).contains("Country code cannot be null");
 	}
 	
 	@Test
