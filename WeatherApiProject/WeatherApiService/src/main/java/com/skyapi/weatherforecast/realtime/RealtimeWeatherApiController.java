@@ -3,9 +3,11 @@ package com.skyapi.weatherforecast.realtime;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.skyapi.weatherforecast.BadRequestException;
 import com.skyapi.weatherforecast.CommonUtility;
 import com.skyapi.weatherforecast.GeolocationException;
 import com.skyapi.weatherforecast.GeolocationService;
@@ -49,5 +51,18 @@ public class RealtimeWeatherApiController {
 			e.printStackTrace();
 			return ResponseEntity.notFound().build();
 		}
+	}
+	
+	@GetMapping("/{locationCode}")
+	public ResponseEntity<?> getRealtimeWeatherByLocationCode(@PathVariable("locationCode") String locationCode) {
+		try {
+			RealtimeWeather realtimeWeather = realtimeWeatherService.getByLocationCode(locationCode);
+			RealtimeWeatherDTO dto = modelMapper.map(realtimeWeather, RealtimeWeatherDTO.class);
+			return ResponseEntity.ok(dto);
+		} catch (LocationNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.notFound().build();
+		}
+		
 	}
 }
