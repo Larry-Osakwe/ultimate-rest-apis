@@ -20,16 +20,13 @@ public class GeolocationService {
 	
 	public GeolocationService() {
 		try {
-			InputStream inputStream = getClass().getResourceAsStream(DBPath);
-			byte[] data = inputStream.readAllBytes();
-			ipLocator.Open(data);
-			inputStream.close();			
+			ipLocator.Open(DBPath);		
 		} catch (IOException ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 	}
 	
-public Location getLocation(String ipAddress) throws GeolocationException {
+	public Location getLocation(String ipAddress) throws GeolocationException {
 		
 		try {
 			IPResult result = ipLocator.IPQuery(ipAddress);

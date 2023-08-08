@@ -1,5 +1,6 @@
 package com.skyapi.weatherforecast.realtime;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,13 +21,14 @@ public class RealtimeWeatherApiController {
 	
 	private GeolocationService locationService;
 	private RealtimeWeatherService realtimeWeatherService;
+	private ModelMapper modelMapper;
 	
 	public RealtimeWeatherApiController(GeolocationService locationService,
-			RealtimeWeatherService realtimeWeatherService) {
+			RealtimeWeatherService realtimeWeatherService, ModelMapper modelMapper) {
 		super();
 		this.locationService = locationService;
 		this.realtimeWeatherService = realtimeWeatherService;
-		
+		this.modelMapper = modelMapper;
 	}
 	
 	@GetMapping
@@ -37,7 +39,9 @@ public class RealtimeWeatherApiController {
 			Location locationFromIP = locationService.getLocation(ipAddress);
 			RealtimeWeather realtimeWeather = realtimeWeatherService.getByLocation(locationFromIP);
 			
-			return ResponseEntity.ok(realtimeWeather);
+			RealtimeWeatherDTO dto = modelMapper.map(realtimeWeather, RealtimeWeatherDTO.class);
+			
+			return ResponseEntity.ok(dto);
 		} catch (GeolocationException e) {
 			e.printStackTrace();
 			return ResponseEntity.badRequest().build();
