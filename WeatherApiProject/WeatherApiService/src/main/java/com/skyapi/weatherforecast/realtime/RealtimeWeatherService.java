@@ -1,5 +1,7 @@
 package com.skyapi.weatherforecast.realtime;
 
+import java.util.Date;
+
 import org.springframework.stereotype.Service;
 
 import com.skyapi.weatherforecast.common.Location;
@@ -40,6 +42,26 @@ public class RealtimeWeatherService {
 		}
 		
 		return realtimeWeather;
+	}
+	
+	public RealtimeWeather update(String locationCode, RealtimeWeather realtimeWeather) {
+		Location location = locationRepo.findByCode(locationCode);
+		
+		if (location == null) {
+			throw new LocationNotFoundException(locationCode);
+		}
+		
+		realtimeWeather.setLocation(location);
+		realtimeWeather.setLastUpdated(new Date());
+		
+		if (location.getRealtimeWeather() == null) {
+			location.setRealtimeWeather(realtimeWeather);
+			Location updatedLocation = locationRepo.save(location);
+			
+			return updatedLocation.getRealtimeWeather();
+		}
+		
+		return realtimeWeatherRepo.save(realtimeWeather);
 	}
 	
 }
