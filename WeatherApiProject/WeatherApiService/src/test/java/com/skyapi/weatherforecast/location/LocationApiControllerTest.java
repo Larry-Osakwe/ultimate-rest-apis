@@ -185,13 +185,15 @@ public class LocationApiControllerTest {
 			.andDo(print());			
 	}
 	
-	@Test
+	@Test 
 	public void testGetShouldReturn404NotFound() throws Exception {
-		String requestURI = END_POINT_PATH + "/ABCDEF";
-		
+		String locationCode = "ABCDEF";
+		String requestURI = END_POINT_PATH + "/" + locationCode;
+
+		Mockito.when(service.get(locationCode)).thenThrow(LocationNotFoundException.class); 
 		mockMvc.perform(get(requestURI))
 			.andExpect(status().isNotFound())
-			.andDo(print());			
+			.andDo(print());
 	}	
 	
 	@Test

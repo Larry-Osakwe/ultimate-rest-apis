@@ -56,10 +56,6 @@ public class LocationApiController {
 	public ResponseEntity<?> getLocation(@PathVariable("code") String code) {
 		Location location = service.get(code);
 		
-		if (location == null) {
-			return ResponseEntity.notFound().build();
-		}
-		
 		return ResponseEntity.ok(entity2DTO(location));
 	}
 	
