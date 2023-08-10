@@ -124,4 +124,81 @@ public class HourlyWeatherApiControllerTest {
 				.andExpect(jsonPath("$.hourly_forecast[0].hour_of_day", is(10)))
 				.andDo(print());
 	}
+	
+	@Test
+	public void testGetByCodeShouldReturn400BadRequest() throws Exception {
+		String locationCode = "DELHI_IN";
+		String requestURI = END_POINT_PATH + "/" + locationCode;
+		
+		mockMvc.perform(get(requestURI))
+				.andExpect(status().isBadRequest())
+				.andDo(print());
+	}	
+	
+	@Test
+	public void testGetByCodeShouldReturn404NotFound() throws Exception {
+		int currentHour = 9;
+		String locationCode = "DELHI_IN";
+		String requestURI = END_POINT_PATH + "/" + locationCode;
+		
+		LocationNotFoundException ex = new LocationNotFoundException(locationCode);
+		when(hourlyWeatherService.getByLocationCode(locationCode, currentHour)).thenThrow(ex);
+		
+		mockMvc.perform(get(requestURI).header(X_CURRENT_HOUR, String.valueOf(currentHour)))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.errors[0]", is(ex.getMessage())))
+				.andDo(print());
+	}	
+	
+	@Test
+	public void testGetByCodeShouldReturn204NoContent() throws Exception {
+		int currentHour = 9;
+		String locationCode = "DELHI_IN";
+		String requestURI = END_POINT_PATH + "/" + locationCode;
+		
+		when(hourlyWeatherService.getByLocationCode(locationCode, currentHour)).thenReturn(Collections.emptyList());
+		
+		mockMvc.perform(get(requestURI).header(X_CURRENT_HOUR, String.valueOf(currentHour)))
+				.andExpect(status().isNoContent())
+				.andDo(print());
+	}	
+	
+	@Test
+	public void testGetByCodeShouldReturn200OK() throws Exception {
+		int currentHour = 9;
+		String locationCode = "DELHI_IN";
+		String requestURI = END_POINT_PATH + "/" + locationCode;
+		
+		Location location = new Location();
+		location.setCode(locationCode);
+		location.setCityName("New York City");
+		location.setRegionName("New York");
+		location.setCountryCode("US");
+		location.setCountryName("United States of America");
+		
+		HourlyWeather forecast1 = new HourlyWeather()
+				.location(location)
+				.hourOfDay(10)
+				.temperature(13)
+				.precipitation(70)
+				.status("Cloudy");		
+		
+		HourlyWeather forecast2 = new HourlyWeather()
+				.location(location)
+				.hourOfDay(11)
+				.temperature(15)
+				.precipitation(60)
+				.status("Sunny");			
+		
+		var hourlyForecast = List.of(forecast1, forecast2);
+		
+		when(hourlyWeatherService.getByLocationCode(locationCode, currentHour)).thenReturn(hourlyForecast);
+		
+		mockMvc.perform(get(requestURI).header(X_CURRENT_HOUR, String.valueOf(currentHour)))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json"))
+				.andExpect(jsonPath("$.location", is(location.toString())))
+				.andExpect(jsonPath("$.hourly_forecast[0].hour_of_day", is(10)))				
+				.andDo(print());
+	}
 }
