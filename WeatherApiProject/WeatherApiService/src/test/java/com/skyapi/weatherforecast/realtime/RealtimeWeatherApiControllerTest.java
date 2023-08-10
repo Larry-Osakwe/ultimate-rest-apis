@@ -26,7 +26,7 @@ import com.skyapi.weatherforecast.location.LocationNotFoundException;
 
 @WebMvcTest(RealtimeWeatherApiController.class)
 public class RealtimeWeatherApiControllerTest {
-	
+
 	private static final String END_POINT_PATH = "/v1/realtime";
 	
 	@Autowired 
@@ -46,6 +46,7 @@ public class RealtimeWeatherApiControllerTest {
 		
 		mockMvc.perform(get(END_POINT_PATH))
 				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.errors[0]", is(ex.getMessage())))
 				.andDo(print());		
 	}
 	
@@ -62,8 +63,9 @@ public class RealtimeWeatherApiControllerTest {
 		
 		mockMvc.perform(get(END_POINT_PATH))
 				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.errors[0]", is(ex.getMessage())))
 				.andDo(print());		
-	}
+	}	
 	
 	@Test
 	public void testGetShouldReturnStatus200OK() throws Exception {
@@ -89,9 +91,12 @@ public class RealtimeWeatherApiControllerTest {
 		Mockito.when(locationService.getLocation(Mockito.anyString())).thenReturn(location);
 		Mockito.when(realtimeWeatherService.getByLocation(location)).thenReturn(realtimeWeather);
 		
+		String expectedLocation = location.getCityName() + ", " + location.getRegionName() + ", " + location.getCountryName();
+		
 		mockMvc.perform(get(END_POINT_PATH))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/json"))
+				.andExpect(jsonPath("$.location", is(expectedLocation)))
 				.andDo(print());		
 	}
 	
@@ -106,8 +111,9 @@ public class RealtimeWeatherApiControllerTest {
 		
 		mockMvc.perform(get(requestURI))
 				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.errors[0]", is(ex.getMessage())))
 				.andDo(print());		
-	}
+	}	
 	
 	@Test
 	public void testGetByLocationCodeShouldReturnStatus200OK() throws Exception {
@@ -143,7 +149,7 @@ public class RealtimeWeatherApiControllerTest {
 				.andExpect(content().contentType("application/json"))
 				.andExpect(jsonPath("$.location", is(expectedLocation)))
 				.andDo(print());		
-	}
+	}	
 	
 	@Test
 	public void testUpdateShouldReturn400BadRequest() throws Exception {
@@ -183,8 +189,9 @@ public class RealtimeWeatherApiControllerTest {
 		
 		mockMvc.perform(put(requestURI).contentType("application/json").content(bodyContent))
 			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.errors[0]", is(ex.getMessage())))
 			.andDo(print());		
-	}
+	}	
 	
 	@Test
 	public void testUpdateShouldReturn200OK() throws Exception {
@@ -226,5 +233,5 @@ public class RealtimeWeatherApiControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.location", is(expectedLocation)))
 			.andDo(print());		
-	}
+	}	
 }

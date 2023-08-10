@@ -14,13 +14,13 @@ public class RealtimeWeatherService {
 
 	private RealtimeWeatherRepository realtimeWeatherRepo;
 	private LocationRepository locationRepo;
-	
+
 	public RealtimeWeatherService(RealtimeWeatherRepository realtimeWeatherRepo, LocationRepository locationRepo) {
 		super();
 		this.realtimeWeatherRepo = realtimeWeatherRepo;
 		this.locationRepo = locationRepo;
 	}
-	
+
 	public RealtimeWeather getByLocation(Location location) {
 		String countryCode = location.getCountryCode();
 		String cityName = location.getCityName();
@@ -63,5 +63,4 @@ public class RealtimeWeatherService {
 		
 		return realtimeWeatherRepo.save(realtimeWeather);
 	}
-	
 }
