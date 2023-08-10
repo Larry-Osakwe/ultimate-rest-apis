@@ -8,9 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.skyapi.weatherforecast.BadRequestException;
 import com.skyapi.weatherforecast.CommonUtility;
 import com.skyapi.weatherforecast.GeolocationException;
 import com.skyapi.weatherforecast.GeolocationService;
@@ -19,6 +22,7 @@ import com.skyapi.weatherforecast.common.Location;
 import com.skyapi.weatherforecast.location.LocationNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/v1/hourly")
@@ -106,6 +110,28 @@ public class HourlyWeatherApiController {
 		});
 		
 		return listDTO;
+		
+	}
+	
+	@PutMapping("/{locationCode}")
+	public ResponseEntity<?> updateHourlyForecast(@PathVariable("locationCode") String locationCode, 
+			@RequestBody @Valid List<HourlyWeatherDTO> listDTO) throws BadRequestException {
+		
+		if (listDTO.isEmpty()) {
+			throw new BadRequestException("Hourly forecast data cannot be empty");
+		}
+		
+		listDTO.forEach(System.out::println);
+		
+		List<HourlyWeather> listHourlyWeather = listDTO2ListEntity(listDTO);
+		
+		System.out.println();
+		
+		listHourlyWeather.forEach(System.out::println);
+		
+		List<HourlyWeather> updateHourlyWeather = hourlyWeatherService.updateByLocationCode(locationCode, listHourlyWeather);
+		
+		return ResponseEntity.ok(listEntity2DTO(updateHourlyWeather));
 		
 	}
 }

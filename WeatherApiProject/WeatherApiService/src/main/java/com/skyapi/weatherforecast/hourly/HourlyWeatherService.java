@@ -1,5 +1,6 @@
 package com.skyapi.weatherforecast.hourly;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -43,5 +44,32 @@ public class HourlyWeatherService {
 		}
 		
 		return hourlyWeatherRepo.findByLocationCode(locationCode, currentHour);
+	}
+	
+	public List<HourlyWeather> updateByLocationCode(String locationCode, List<HourlyWeather> hourlyWeatherInRequest) {
+		Location location = locationRepo.findByCode(locationCode);
+		
+		if (location == null) {
+			throw new LocationNotFoundException(locationCode);
+		}
+		
+		for (HourlyWeather item : hourlyWeatherInRequest) {
+			item.getId().setLocation(location);
+		}
+		
+		List<HourlyWeather> hourlyWeatherInDB = location.getListHourlyWeather();
+		List<HourlyWeather> hourlyWeatherToBeRemoved = new ArrayList<>();
+		
+		for (HourlyWeather item : hourlyWeatherInDB) {
+			if (!hourlyWeatherInRequest.contains(item)) {
+				hourlyWeatherToBeRemoved.add(item.getShallowCopy());
+			}
+		}
+		
+		for (HourlyWeather item : hourlyWeatherToBeRemoved) {
+			hourlyWeatherInDB.remove(item);
+		}
+		
+		return (List<HourlyWeather>) hourlyWeatherRepo.saveAll(hourlyWeatherInRequest);
 	}
 }
