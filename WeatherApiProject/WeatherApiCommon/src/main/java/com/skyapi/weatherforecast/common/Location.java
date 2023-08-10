@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,11 +13,10 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
-
 @Entity
 @Table(name = "locations")
 public class Location {
-	
+
 	@Column(length = 12, nullable = false, unique = true)
 	@Id
 	private String code;
@@ -45,7 +43,7 @@ public class Location {
 	
 	@OneToMany(mappedBy = "id.location", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<HourlyWeather> listHourlyWeather = new ArrayList<>();
-
+	
 	public Location() {
 	
 	}
@@ -155,5 +153,5 @@ public class Location {
 	public Location code(String code) {
 		setCode(code);
 		return this;
-	}
+	}	
 }
