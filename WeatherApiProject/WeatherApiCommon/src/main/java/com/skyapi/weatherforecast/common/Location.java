@@ -1,13 +1,15 @@
 package com.skyapi.weatherforecast.common;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
@@ -22,18 +24,14 @@ public class Location {
 	private String code;
 
 	@Column(length = 128, nullable = false)
-	@JsonProperty("city_name")
 	private String cityName;
 
 	@Column(length = 128)
-	@JsonProperty("region_name")
 	private String regionName;
 
-	@JsonProperty("country_name")
 	@Column(length = 64, nullable = false)
 	private String countryName;
 
-	@JsonProperty("country_code")
 	@Column(length = 2, nullable = false)
 	private String countryCode;
 
@@ -45,8 +43,11 @@ public class Location {
 	@PrimaryKeyJoinColumn
 	private RealtimeWeather realtimeWeather;
 	
+	@OneToMany(mappedBy = "id.location", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<HourlyWeather> listHourlyWeather = new ArrayList<>();
+
 	public Location() {
-		
+	
 	}
 	
 	public Location(String cityName, String regionName, String countryName, String countryCode) {
@@ -56,7 +57,7 @@ public class Location {
 		this.countryName = countryName;
 		this.countryCode = countryCode;
 	}
-	
+
 	public String getCode() {
 		return code;
 	}
@@ -112,7 +113,7 @@ public class Location {
 	public void setTrashed(boolean trashed) {
 		this.trashed = trashed;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(code);
@@ -134,12 +135,25 @@ public class Location {
 	public String toString() {
 		return cityName + ", " + (regionName != null ? regionName + ", " : "") + countryName;
 	}
-	
+
 	public RealtimeWeather getRealtimeWeather() {
 		return realtimeWeather;
 	}
 
 	public void setRealtimeWeather(RealtimeWeather realtimeWeather) {
 		this.realtimeWeather = realtimeWeather;
+	}
+
+	public List<HourlyWeather> getListHourlyWeather() {
+		return listHourlyWeather;
+	}
+
+	public void setListHourlyWeather(List<HourlyWeather> listHourlyWeather) {
+		this.listHourlyWeather = listHourlyWeather;
+	}
+	
+	public Location code(String code) {
+		setCode(code);
+		return this;
 	}
 }

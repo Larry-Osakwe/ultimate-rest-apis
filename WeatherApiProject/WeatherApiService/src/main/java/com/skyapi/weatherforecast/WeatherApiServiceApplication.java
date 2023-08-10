@@ -6,6 +6,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import com.skyapi.weatherforecast.common.HourlyWeather;
+import com.skyapi.weatherforecast.hourly.HourlyWeatherDTO;
+
 @SpringBootApplication
 public class WeatherApiServiceApplication {
 
@@ -14,6 +17,10 @@ public class WeatherApiServiceApplication {
 	public ModelMapper getModelMapper() {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		var typeMap1 = mapper.typeMap(HourlyWeather.class, HourlyWeatherDTO.class);
+		typeMap1.addMapping(src -> src.getId().getHourOfDay(), HourlyWeatherDTO::setHourOfDay);
+		
 		return mapper;
 	}
 	

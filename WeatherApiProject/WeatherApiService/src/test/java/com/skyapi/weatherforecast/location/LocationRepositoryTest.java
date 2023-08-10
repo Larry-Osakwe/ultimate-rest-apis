@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 
+import com.skyapi.weatherforecast.common.HourlyWeather;
 import com.skyapi.weatherforecast.common.Location;
 import com.skyapi.weatherforecast.common.RealtimeWeather;
 
@@ -100,4 +101,53 @@ public class LocationRepositoryTest {
 		
 		assertThat(updatedLocation.getRealtimeWeather().getLocationCode()).isEqualTo(code);
 	}
+	
+	@Test
+	public void testAddHourlyWeatherData() {
+		Location location = repository.findById("NYC_USA").get();
+		
+		List<HourlyWeather> listHourlyWeather = location.getListHourlyWeather();
+		
+		HourlyWeather forecast1 = new HourlyWeather().id(location, 10)
+											.temperature(15)
+											.precipitation(40)
+											.status("Sunny");
+		HourlyWeather forecast2 = new HourlyWeather()
+				.location(location)
+				.hourOfDay(11)
+				.temperature(16)
+				.precipitation(50)
+				.status("Cloudy");		
+		
+		listHourlyWeather.add(forecast1);
+		listHourlyWeather.add(forecast2);
+		
+		Location updatedLocation = repository.save(location);
+		
+		assertThat(updatedLocation.getListHourlyWeather()).isNotEmpty();
+	}
+	
+	@Test
+	public void testFindByCountryCodeAndCityNameNotFound() {
+		String countryCode = "BZ";
+		String cityName = "City";
+		
+		Location location = repository.findByCountryCodeAndCityName(countryCode, cityName);
+		
+		assertThat(location).isNull();
+	}
+	
+	@Test
+	public void testFindByCountryCodeAndCityNameFound() {
+		String countryCode = "US";
+		String cityName = "New York City";
+		
+		Location location = repository.findByCountryCodeAndCityName(countryCode, cityName);
+		
+		assertThat(location).isNotNull();
+		assertThat(location.getCountryCode()).isEqualTo(countryCode);
+		assertThat(location.getCityName()).isEqualTo(cityName);
+	}	
+	
+	
 }
